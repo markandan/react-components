@@ -1,0 +1,27 @@
+{
+  "name": "react-components",
+  "version": "0.0.1",
+  "description": "Repository for reusable react components",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/markandan/react-components.git"
+  },
+  "keywords": [
+    "ReactJS",
+    "React",
+    "Components"
+  ],
+  "author": "Markandan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/markandan/react-components/issues"
+  },
+  "homepage": "https://github.com/markandan/react-components#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0"
+  }
+}
