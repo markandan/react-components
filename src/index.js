@@ -4,7 +4,6 @@ import ReactDom from 'react-dom';
 import 'raf/polyfill';
 
 import SimpleDropdown from "./components/simpledropdown/SimpleDropdown";
-import "./components/simpledropdown/SimpleDropdown.scss";
 
 const values = [{
   value: 1, label: "Apple"

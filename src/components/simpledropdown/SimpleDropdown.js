@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import "./components/simpledropdown/SimpleDropdown.scss";
+
 class SimpleDropdown extends React.Component {
   constructor(props) {
     super(props);
