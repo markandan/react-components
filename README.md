@@ -2,10 +2,10 @@
 ## SimpleDropdrown
 Simple dropdown components
 ### Usage
-<code>
+
+```javascript
 //value to be rendered as options in the dropdown can be simple array or array of objects
-</code>
-<code>
+
 let valuesArray = ["Apple", "Banana", "Guava", "Orange", "Watermelon", "Pear"]; //simple array
 let valuesObj = [{
   value: 1, label: "Apple"
@@ -20,13 +20,16 @@ let valuesObj = [{
 },{
   value: 6, label: "Pear"
 }]; // array of objects
+
 //function to be called when value of the dropdown is changed
 handlerOnChange(selectedIndex) {
   console.log(selectedIndex);
 }
+
 //defaultedSelectedIndex value
 let defaultSelectedValue = 2; //Zero indexed integer value;
-<SimpleDropdown values={valuesArray || valuesObj} onChangeHandler={handlerOnChange} selectedIndex={defaultSelectedValue} />
-<code>
 
-**Props values,onChangeHandler and selectedIndex are mandatory **
+<SimpleDropdown values={valuesArray || valuesObj} onChangeHandler={handlerOnChange} selectedIndex={defaultSelectedValue} />
+```
+
+> Props values,onChangeHandler and selectedIndex are mandatory
