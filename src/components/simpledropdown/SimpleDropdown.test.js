@@ -22,9 +22,11 @@ describe("<SimpleDropdown/>", () => {
   }];
   const valueArray = ["Apple", "Banana", "Guava", "Orange", "Watermelon", "Pear"];
   const onChangeHandler = jest.fn();
+  const className = "customClass";
+  const placeholderTxt = "Select...";
 
   beforeEach(() => {
-    simpleDropDown = mount(<SimpleDropdown values={values} onChangeHandler={onChangeHandler} selectedIndex={2} />)
+    simpleDropDown = mount(<SimpleDropdown values={values} onChangeHandler={onChangeHandler} selectedIndex={2} className={className} placeholderTxt={placeholderTxt}/>);
   });
   test("should set the selectedIndex in the state", () => {
     expect(simpleDropDown.state("selectedIndex")).toEqual(2);
@@ -33,15 +35,16 @@ describe("<SimpleDropdown/>", () => {
     expect(simpleDropDown.find(".selectedValue").text()).toEqual(values[2].label);
   });
   test("should not render the selected value if the selectedIndex is -1", () => {
-    simpleDropDown.setProps({selectedIndex: -1})
-    expect(simpleDropDown.find(".selectedValue").text()).toEqual(values[2].label);
+    simpleDropDown.setState({selectedIndex: -1});
+    expect(simpleDropDown.find(".selectedValue").text()).toEqual("");
   });
   test("should render the dropdown values based on the array provided", () => {
     expect(simpleDropDown.find(".rc-dropdown-options").children()).toHaveLength(values.length);
     expect(simpleDropDown.find(".rc-dropdown-options").childAt(0).text()).toEqual(values[0].label);
   });
   test("should render the values if the values is a simple array and not an object", () => {
-    simpleDropDown.setProps({values: valueArray, selectedIndex: 0});
+    simpleDropDown.setProps({values: valueArray});
+    simpleDropDown.setState({selectedIndex: 0});
     expect(simpleDropDown.find(".rc-dropdown-options").children()).toHaveLength(valueArray.length);
     expect(simpleDropDown.find(".rc-dropdown-options").childAt(0).text()).toEqual(valueArray[0]);
   });
@@ -74,4 +77,17 @@ describe("<SimpleDropdown/>", () => {
     expect(onChangeHandler).toHaveBeenCalled();
     expect(onChangeHandler.mock.calls[0][0]).toEqual(3);
   });
+  test("should have the custom className that is passed on as prop", () => {
+    expect(simpleDropDown.find(`.rc-dropdown.${className}`)).toHaveLength(1);
+  });
+  test("should render the close button to clear the selection", () => {
+    expect(simpleDropDown.find(".clearAllSelection")).toHaveLength(1);
+  });
+  test("should clear the selectedIndex when the close button is clicked", () => {
+    simpleDropDown.find(".clearAllSelection").simulate("click");
+    expect(simpleDropDown.state("selectedIndex")).toEqual(-1);
+    expect(simpleDropDown.find(".selectedValue").text()).toEqual("");
+    expect(simpleDropDown.find(".clearAllSelection")).toHaveLength(0);
+  });
+
 });

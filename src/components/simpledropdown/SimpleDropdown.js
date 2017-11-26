@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import "./components/simpledropdown/SimpleDropdown.scss";
+import "./SimpleDropdown.scss";
 
 class SimpleDropdown extends React.Component {
   constructor(props) {
@@ -14,6 +14,7 @@ class SimpleDropdown extends React.Component {
     this.renderOptions = this.renderOptions.bind(this);
     this.toggleOptions = this.toggleOptions.bind(this);
     this.onOptionChange = this.onOptionChange.bind(this);
+    this.clearAllSelection = this.clearAllSelection.bind(this);
   }
 
   renderOptions() {
@@ -41,14 +42,20 @@ class SimpleDropdown extends React.Component {
       }
     });
   }
+
+  clearAllSelection() {
+    this.setState({selectedIndex: -1});
+  }
   render() {
     let props = this.props;
     let className = (this.state.isOpen) ? "rc-dropdown open" : "rc-dropdown";
+    className = (this.props.className) ? `${className} ${this.props.className}`  : className;
     return (
       <div className={className}>
         <div className="selectedValue" onClick={this.toggleOptions}>
           {(this.state.selectedIndex >= 0) ? props.values[this.state.selectedIndex].label : ""}
         </div>
+        {(this.state.selectedIndex >= 0) ? <span className="clearAllSelection" onClick={this.clearAllSelection}>×</span> : "" }
         <ul className="rc-dropdown-options">
           {this.renderOptions()}
         </ul>
@@ -62,7 +69,8 @@ SimpleDropdown.propTypes = {
   onChangeHandler: PropTypes.func.isRequired,
   selectedIndex: PropTypes.number.isRequired,
   errorMsg: PropTypes.string,
-  autoComplete: PropTypes.bool
+  autoComplete: PropTypes.bool,
+  className: PropTypes.string
 };
 
 export default SimpleDropdown;

@@ -18,6 +18,9 @@
     border: 1px solid #000;
     padding: 5px;
     cursor: pointer;
+    padding-right: 25px;
+    min-height: 30px;
+    box-sizing: border-box;
   }
   .rc-dropdown-options {
     list-style: none;
@@ -40,6 +43,13 @@
     &:hover {
       background-color: #CCC;
     }
+  }
+  .clearAllSelection {
+    position: absolute;
+    top: calc(50% - 11px);
+    right: 16px;
+    margin-right: 2px;
+    cursor: pointer;
   }
   &.open {
     &:after{
