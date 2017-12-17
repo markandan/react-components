@@ -2,6 +2,7 @@
   display: inline-block;
   position: relative;
   min-width: 100px;
+  font-size: 1em;
   &:after{
     display: inline-block;
     position: absolute;
@@ -37,7 +38,7 @@
     box-sizing: border-box;
     display: none;
   }
-  li{
+  .rc-option {
     padding: 5px;
     cursor: pointer;
     &:hover {
@@ -66,5 +67,13 @@
     border: none;
     vertical-align: top;
     outline: none;
+    font-size: 1em;
+  }
+  .rc-error {
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.75em;
+    color: #F00;
+    padding: 5px;
   }
 }

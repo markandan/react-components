@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDom from 'react-dom';
 import 'raf/polyfill';
 
-import Dropdown from "./components/simpledropdown/Dropdown";
+import Dropdown from "./components/dropdown/Dropdown";
 
 const values = [{
   value: 1, label: "Apple"

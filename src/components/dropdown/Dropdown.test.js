@@ -24,7 +24,13 @@ describe("<SimpleDropdown/>", () => {
   const onChangeHandler = jest.fn();
   const className = "customClass";
   const placeholderTxt = "Select...";
+  const filterValues = [{value: 2, label: "Banana"}, {value: 4, label: "Orange"}];
+  const noOptionsFound = "No Results Found";
+  beforeEach(() => {
+    dropDown = mount(<SimpleDropdown values={values} onChangeHandler={onChangeHandler} selectedIndex={2} className={className} placeholderTxt={placeholderTxt}/>);
+  });
 
+  const filterValuesArray = ["Banana", "Orange"];
   beforeEach(() => {
     dropDown = mount(<SimpleDropdown values={values} onChangeHandler={onChangeHandler} selectedIndex={2} className={className} placeholderTxt={placeholderTxt}/>);
   });
@@ -91,6 +97,7 @@ describe("<SimpleDropdown/>", () => {
   });
   test("should render the close button to clear the selection", () => {
     expect(dropDown.find(".rc-clear-all-selection")).toHaveLength(1);
+    expect(dropDown.state("filteredValues")).toEqual(values);
   });
   test("should clear the selectedIndex when the close button is clicked", () => {
     dropDown.find(".rc-clear-all-selection").simulate("click");
@@ -98,5 +105,41 @@ describe("<SimpleDropdown/>", () => {
     expect(dropDown.state("inputValue")).toEqual("");
     expect(dropDown.find(".rc-selected-value").text()).toEqual("");
     expect(dropDown.find(".rc-clear-all-selection")).toHaveLength(0);
+  });
+  test("should filter the options based on the value in the textbox", () => {
+    expect(dropDown.state("filteredValues")).toEqual(values);
+    dropDown.find(".rc-txt-input").simulate('change', { target: { value: 'an' } });
+    expect(dropDown.state("filteredValues")).toEqual([{value: 2, label: "Banana"}, {value: 4, label: "Orange"}]);
+  });
+  test("should render only options that are filtered based on the values in textbox", () => {
+    expect(dropDown.state("filteredValues")).toEqual(values);
+    dropDown.find(".rc-txt-input").simulate('change', { target: { value: 'an' } });
+    expect(dropDown.state("filteredValues")).toEqual(filterValues);
+    expect(dropDown.find(".rc-dropdown-options").children()).toHaveLength(filterValues.length);
+    expect(dropDown.find(".rc-dropdown-options").childAt(0).text()).toEqual(filterValues[0].label);
+  });
+  test("should render only options that are filtered based on the values in textbox if the values is only an array", () => {
+    dropDown.setProps({values: valueArray});
+    expect(dropDown.state("filteredValues")).toEqual(valueArray);
+    dropDown.find(".rc-txt-input").simulate('change', { target: { value: 'an' } });
+    expect(dropDown.state("filteredValues")).toEqual(filterValuesArray);
+    expect(dropDown.find(".rc-dropdown-options").children()).toHaveLength(filterValuesArray.length);
+    expect(dropDown.find(".rc-dropdown-options").childAt(0).text()).toEqual(filterValuesArray[0]);
+  });
+  test("should render error message when there is no options for the keyed in string", () => {
+    expect(dropDown.state("filteredValues")).toEqual(values);
+    dropDown.find(".rc-txt-input").simulate('change', { target: { value: 'ab' } });
+    expect(dropDown.state("filteredValues")).toEqual([]);
+    expect(dropDown.find(".rc-dropdown-options").children()).toHaveLength(1);
+    expect(dropDown.find(".rc-dropdown-options").childAt(0).text()).toEqual(noOptionsFound);
+  });
+
+  test("should render error message based on the props", () => {
+    dropDown.setProps({noResultsTxt: "Not Found"});
+    expect(dropDown.state("filteredValues")).toEqual(values);
+    dropDown.find(".rc-txt-input").simulate('change', { target: { value: 'ab' } });
+    expect(dropDown.state("filteredValues")).toEqual([]);
+    expect(dropDown.find(".rc-dropdown-options").children()).toHaveLength(1);
+    expect(dropDown.find(".rc-dropdown-options").childAt(0).text()).toEqual("Not Found");
   });
 });
