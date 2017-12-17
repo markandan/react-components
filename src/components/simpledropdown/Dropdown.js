@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import "./SimpleDropdown.scss";
+import "./Dropdown.scss";
 
-class SimpleDropdown extends React.Component {
+class Dropdown extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -52,7 +52,9 @@ class SimpleDropdown extends React.Component {
       }
     });
   }
-
+  handleFocus(event) {
+    event.target.select;
+  }
   clearAllSelection() {
     this.setState({selectedIndex: -1, inputValue: ""});
   }
@@ -64,7 +66,7 @@ class SimpleDropdown extends React.Component {
       <div className={className}>
         <div className="rc-selected-value"  onClick={this.toggleOptions}>
           <input type="text" value={state.inputValue} className="rc-txt-input"
-          placeholder={props.placeholderTxt}/>
+          placeholder={props.placeholderTxt} onFocus={this.handleFocus}/>
         </div>
         {(state.selectedIndex >= 0) ? <span className="rc-clear-all-selection" onClick={this.clearAllSelection}>×</span> : "" }
         <ul className="rc-dropdown-options">
@@ -75,7 +77,7 @@ class SimpleDropdown extends React.Component {
   }
 }
 
-SimpleDropdown.propTypes = {
+Dropdown.propTypes = {
   values: PropTypes.array.isRequired,
   onChangeHandler: PropTypes.func.isRequired,
   selectedIndex: PropTypes.number.isRequired,
@@ -85,4 +87,4 @@ SimpleDropdown.propTypes = {
   placeholderTxt: PropTypes.string
 };
 
-export default SimpleDropdown;
+export default Dropdown;

@@ -1,6 +1,6 @@
 import React from "react";
 import {mount} from "enzyme";
-import SimpleDropdown from "./SimpleDropdown";
+import SimpleDropdown from "./Dropdown";
 import Enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 Enzyme.configure({ adapter: new Adapter() });
