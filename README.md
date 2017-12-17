@@ -29,7 +29,7 @@ handlerOnChange(selectedIndex) {
 //defaultedSelectedIndex value
 let defaultSelectedValue = 2; //Zero indexed integer value;
 
-<SimpleDropdown values={valuesArray || valuesObj} onChangeHandler={handlerOnChange} selectedIndex={defaultSelectedValue} />
+<Dropdown values={valuesArray || valuesObj} onChangeHandler={handlerOnChange} selectedIndex={defaultSelectedValue} />
 ```
 
 > Props values,onChangeHandler and selectedIndex are mandatory

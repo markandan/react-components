@@ -14,7 +14,7 @@
     border-top: 5px solid #000;
     content: " ";
   }
-  .selectedValue {
+  .rc-selected-value {
     border: 1px solid #000;
     padding: 5px;
     cursor: pointer;
@@ -44,7 +44,7 @@
       background-color: #CCC;
     }
   }
-  .clearAllSelection {
+  .rc-clear-all-selection {
     position: absolute;
     top: calc(50% - 11px);
     right: 16px;
@@ -61,5 +61,10 @@
     .rc-dropdown-options {
       display: inline-block;
     }
+  }
+  .rc-txt-input {
+    border: none;
+    vertical-align: top;
+    outline: none;
   }
 }

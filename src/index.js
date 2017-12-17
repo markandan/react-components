@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDom from 'react-dom';
 import 'raf/polyfill';
 
-import SimpleDropdown from "./components/simpledropdown/SimpleDropdown";
+import Dropdown from "./components/simpledropdown/Dropdown";
 
 const values = [{
   value: 1, label: "Apple"
@@ -21,8 +21,8 @@ const values = [{
 
 const App = () => {
     ReactDom.render(
-          <SimpleDropdown values={values} onChangeHandler={()=>{}}
-            selectedIndex={0} autoComplete={false}/>,
+          <Dropdown values={values} onChangeHandler={()=>{}}
+            selectedIndex={0} autoComplete={false} placeholderTxt="Search..."/>,
         document.getElementById('root')
     );
 };
