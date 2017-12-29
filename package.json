@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "watch": "webpack --progress --watch",
-    "start": "webpack-dev-server --open",
-    "build": "eslint src/**/*.js --ignore-path .eslintignore &&  webpack -p",
+    "start": "webpack-dev-server --port 9000 --open",
+    "build": "./node_modules/.bin/eslint src/**/*.js --fix --ignore-path .eslintignore &&  webpack -p",
     "test": "jest",
-    "testwatch": "jest --watch"
+    "testwatch": "./node_modules/.bin/eslint src/**/*.js --fix --ignore-path .eslintignore && jest --watch"
   },
   "repository": {
     "type": "git",

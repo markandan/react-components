@@ -113,19 +113,44 @@ class Dropdown extends React.Component {
     const { props, state } = this;
     let className = (state.isOpen) ? 'rc-dropdown open' : 'rc-dropdown';
     className = (props.className) ? `${className} ${props.className}` : className;
+    className = (props.disabled) ? `${className} disabled` : className;
+    const inputClassName = (props.disabled) ? 'rc-txt-input disabled' : 'rc-txt-input';
     return (
-      <div className={className}>
-        <div className="rc-selected-value" onClick={this.toggleOptions} role="presentation">
-          <input
-            type="text"
-            value={state.inputValue}
-            className="rc-txt-input"
-            placeholder={props.placeholderTxt}
-            onFocus={this.handleFocus}
-            onChange={this.handleTextChange}
-          />
+      <div className={className} >
+        <div
+          className="rc-selected-value"
+          onClick={
+          () => {
+            if (!props.disabled) {
+              this.toggleOptions();
+            }
+          }}
+          role="presentation"
+        >
+          {
+            props.autoComplete ?
+              <input
+                type="text"
+                value={state.inputValue}
+                className={inputClassName}
+                placeholder={props.placeholderTxt}
+                onFocus={this.handleFocus}
+                onChange={this.handleTextChange}
+                disabled={props.disabled}
+              /> :
+              <span className="rc-lbl-value">{state.inputValue ? state.inputValue : props.placeholderTxt}</span>
+          }
         </div>
-        {(state.selectedIndex >= 0) ? <span className="rc-clear-all-selection" onClick={this.clearAllSelection} role="presentation">×</span> : '' }
+        {(state.selectedIndex >= 0) ? <span
+          className="rc-clear-all-selection"
+          onClick={() => {
+          if (!props.disabled) {
+            this.clearAllSelection();
+          }
+        }}
+          role="presentation"
+        >×
+                                      </span> : '' }
         <div className="rc-dropdown-options">
           {this.renderOptions()}
         </div>
@@ -135,13 +160,14 @@ class Dropdown extends React.Component {
 }
 
 Dropdown.propTypes = {
-  values: PropTypes.arrayOf.isRequired,
+  values: PropTypes.array.isRequired,
   onChangeHandler: PropTypes.func.isRequired,
   selectedIndex: PropTypes.number.isRequired,
   autoComplete: PropTypes.bool,
   className: PropTypes.string,
   placeholderTxt: PropTypes.string,
   noResultsTxt: PropTypes.string,
+  disabled: PropTypes.bool,
 };
 
 Dropdown.defaultProps = {
@@ -149,5 +175,6 @@ Dropdown.defaultProps = {
   className: '',
   placeholderTxt: 'Search...',
   noResultsTxt: 'No Results Found',
+  disabled: false,
 };
 export default Dropdown;

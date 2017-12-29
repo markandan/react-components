@@ -26,8 +26,9 @@ describe("<SimpleDropdown/>", () => {
   const placeholderTxt = "Select...";
   const filterValues = [{value: 2, label: "Banana"}, {value: 4, label: "Orange"}];
   const noOptionsFound = "No Results Found";
+  const width = 300;
   beforeEach(() => {
-    dropDown = mount(<SimpleDropdown values={values} onChangeHandler={onChangeHandler} selectedIndex={2} className={className} placeholderTxt={placeholderTxt}/>);
+    dropDown = mount(<SimpleDropdown values={values} onChangeHandler={onChangeHandler} selectedIndex={2} className={className} placeholderTxt={placeholderTxt} width={width}/>);
   });
 
   const filterValuesArray = ["Banana", "Orange"];
@@ -141,5 +142,27 @@ describe("<SimpleDropdown/>", () => {
     expect(dropDown.state("filteredValues")).toEqual([]);
     expect(dropDown.find(".rc-dropdown-options").children()).toHaveLength(1);
     expect(dropDown.find(".rc-dropdown-options").childAt(0).text()).toEqual("Not Found");
+  });
+  test ("should not render textbox if autocomplete is false", () => {
+    dropDown.setProps({autoComplete: false});
+    expect(dropDown.find(".rc-txt-input")).toHaveLength(0);
+    expect(dropDown.find(".rc-lbl-value")).toHaveLength(1);
+  });
+  test ("should disable the textbox and the click events when the disabled prop is passed", () => {
+    dropDown.setProps({autoComplete: true, disabled: true});
+    expect(dropDown.find('.rc-dropdown.disabled')).toHaveLength(1);
+    expect(dropDown.find(".rc-txt-input.disabled")).toHaveLength(1);
+    dropDown.find(".rc-selected-value").simulate("click");
+    expect(dropDown.find(".rc-dropdown.open")).toHaveLength(0);
+    dropDown.find(".rc-clear-all-selection").simulate("click");
+    expect(dropDown.state("selectedIndex")).toEqual(2);
+
+    dropDown.setProps({autoComplete: true, disabled: false});
+    expect(dropDown.find('.rc-dropdown.disabled')).toHaveLength(0);
+    expect(dropDown.find(".rc-txt-input.disabled")).toHaveLength(0);
+    dropDown.find(".rc-selected-value").simulate("click");
+    expect(dropDown.find(".rc-dropdown.open")).toHaveLength(1);
+    dropDown.find(".rc-clear-all-selection").simulate("click");
+    expect(dropDown.state("selectedIndex")).toEqual(-1);
   });
 });

@@ -25,8 +25,9 @@ const App = () => {
       values={values}
       onChangeHandler={() => {}}
       selectedIndex={0}
-      autoComplete={false}
+      autoComplete
       placeholderTxt="Search..."
+      disabled={false}
     />,
     document.getElementById('root'),
   );
