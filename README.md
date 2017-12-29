@@ -33,3 +33,13 @@ let defaultSelectedValue = 2; //Zero indexed integer value;
 ```
 
 > Props values,onChangeHandler and selectedIndex are mandatory
+> Props and Default values
+>
+values: Array (Required),
+onChangeHandler: Function (Required),
+selectedIndex: Number (Required) [-1 if no value to be selected or zero-based index],
+autoComplete: Boolean [default is true, false to disable autoComplete feature],
+className: String [Any custom class to be added],
+placeholderTxt: String [String to be displayed when no items are selected , default value is "Search..."],
+noResultsTxt: String [String to be displayed when no items found when using autoComplete feature. Note: This prop is not used when autoComplete is false],
+disabled: Boolean [to disable the dropdown, default is false],
