@@ -27,6 +27,20 @@ describe("<SimpleDropdown/>", () => {
   const filterValues = [{value: 2, label: "Banana"}, {value: 4, label: "Orange"}];
   const noOptionsFound = "No Results Found";
   const width = 300;
+  const valuesWithDisabledOption = [{
+    value: 1, label: "Apple"
+  },{
+    value: 2, label: "Banana"
+  },{
+    value: 3, label: "Guava", disabled: true
+  },{
+    value: 4, label: "Orange"
+  },{
+    value: 5, label: "Watermelon"
+  },{
+    value: 6, label: "Pear"
+  }];
+
   beforeEach(() => {
     dropDown = mount(<SimpleDropdown values={values} onChangeHandler={onChangeHandler} selectedIndex={2} className={className} placeholderTxt={placeholderTxt} width={width}/>);
   });
@@ -164,5 +178,13 @@ describe("<SimpleDropdown/>", () => {
     expect(dropDown.find(".rc-dropdown.open")).toHaveLength(1);
     dropDown.find(".rc-clear-all-selection").simulate("click");
     expect(dropDown.state("selectedIndex")).toEqual(-1);
+  });
+
+  test ("should disable the options and the click events when the disabled prop for the option is passed", () => {
+    dropDown.setProps({values: valuesWithDisabledOption});
+    onChangeHandler.mockReset();
+    expect(dropDown.find(".rc-option.disabled")).toHaveLength(1);
+    dropDown.find(".rc-option.disabled").simulate("click");
+    expect(onChangeHandler).not.toHaveBeenCalled();
   });
 });

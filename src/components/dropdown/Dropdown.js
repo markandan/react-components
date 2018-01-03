@@ -21,6 +21,11 @@ class Dropdown extends React.Component {
     this.handleTextChange = this.handleTextChange.bind(this);
     this.handleFocus = this.handleFocus.bind(this);
     this.getInputValue = this.getInputValue.bind(this);
+    this.handleDocumentClick = this.handleDocumentClick.bind(this);
+  }
+
+  componentDidMount() {
+    document.addEventListener('click', this.handleDocumentClick, false);
   }
 
   componentWillReceiveProps(newProps) {
@@ -33,6 +38,10 @@ class Dropdown extends React.Component {
     if (isEqual(newProps.values, this.props.values)) {
       this.setState({ filteredValues: [...newProps.values] });
     }
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('click', this.handleDocumentClick, false);
   }
 
   onOptionChange(value) {
@@ -55,6 +64,12 @@ class Dropdown extends React.Component {
       return (typeof values[0] === 'string' ? values[selectedIndex] : values[selectedIndex].label);
     }
     return '';
+  }
+
+  handleDocumentClick(event) {
+    if (this.dropDownNode && !this.dropDownNode.contains(event.target) && this.state.isOpen) {
+        this.setState({ isOpen: false });
+    }
   }
 
   toggleOptions() {
@@ -91,16 +106,20 @@ class Dropdown extends React.Component {
       return (<div className="rc-error">{this.props.noResultsTxt}</div>);
     }
     values.forEach((value) => {
-      valueStr = (typeof value === 'string') ? value : value.value;
-      labelStr = (typeof value === 'string') ? value : value.label;
+      const optionType = (typeof value === 'string');
+      valueStr = optionType ? value : value.value;
+      labelStr = optionType ? value : value.label;
+      const className = (!optionType && value.disabled) ? 'rc-option disabled' : 'rc-option';
       valuesList.push(<div
-        className="rc-option"
+        className={className}
         data-value={valueStr}
         key={valueStr}
         role="presentation"
         onClick={
                  () => {
-                   this.onOptionChange(value);
+                   if (!value.disabled) {
+                     this.onOptionChange(value);
+                   }
                 }
               }
       >{labelStr}
@@ -116,7 +135,7 @@ class Dropdown extends React.Component {
     className = (props.disabled) ? `${className} disabled` : className;
     const inputClassName = (props.disabled) ? 'rc-txt-input disabled' : 'rc-txt-input';
     return (
-      <div className={className} >
+      <div className={className} ref={node => this.dropDownNode = node}>
         <div
           className="rc-selected-value"
           onClick={

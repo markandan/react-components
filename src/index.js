@@ -14,7 +14,7 @@ const values = [{
 }, {
   value: 4, label: 'Orange',
 }, {
-  value: 5, label: 'WatermelonWatermelon',
+  value: 5, label: 'WatermelonWatermelon', disabled: true,
 }, {
   value: 6, label: 'Pear',
 }];
