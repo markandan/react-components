@@ -69,9 +69,8 @@ class Dropdown extends React.Component {
 
   handleDocumentClick(event) {
     if (this.dropDownNode && !this.dropDownNode.contains(event.target) && this.state.isOpen) {
-      let inputValue = this.getInputValue(this.state.selectedIndex, this.props.values)
+      const inputValue = this.getInputValue(this.state.selectedIndex, this.props.values);
       this.setState({ isOpen: false, inputValue });
-
     }
   }
 
@@ -100,6 +99,15 @@ class Dropdown extends React.Component {
       filteredValues: [...this.props.values],
     });
   }
+
+  checkValueSelected(value) {
+    const { props, state } = this;
+    if (state.selectedIndex === -1) {
+      return false;
+    }
+    return ((typeof value === 'string') ? props.values[state.selectedIndex] === value : (props.values[state.selectedIndex].value === value.value && props.values[state.selectedIndex].label === value.label));
+  }
+
   renderOptions() {
     const values = this.state.filteredValues;
     const valuesList = [];
@@ -113,7 +121,7 @@ class Dropdown extends React.Component {
       valueStr = optionType ? value : value.value;
       labelStr = optionType ? value : value.label;
       let className = (!optionType && value.disabled) ? 'rc-option disabled' : 'rc-option';
-      let isValueSelected = this.checkValueSelected(value);
+      const isValueSelected = this.checkValueSelected(value);
       className = (isValueSelected) ? `${className} selected` : className;
       valuesList.push(<div
         className={className}
@@ -133,13 +141,7 @@ class Dropdown extends React.Component {
 
     return valuesList;
   }
-  checkValueSelected(value) {
-    let {props, state} = this;
-    if (state.selectedIndex === -1) {
-      return false;
-    }
-    return ((typeof value === 'string') ? props.values[state.selectedIndex] === value : (props.values[state.selectedIndex].value === value.value && props.values[state.selectedIndex].label === value.label));
-  }
+
   render() {
     const { props, state } = this;
     let className = (state.isOpen) ? 'rc-dropdown open' : 'rc-dropdown';
