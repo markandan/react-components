@@ -187,4 +187,11 @@ describe("<SimpleDropdown/>", () => {
     dropDown.find(".rc-option.disabled").simulate("click");
     expect(onChangeHandler).not.toHaveBeenCalled();
   });
+  test("should add selected class to the option selected", () => {
+    onChangeHandler.mockReset();
+    dropDown.find(".rc-selected-value").simulate("click");
+    expect(dropDown.find(".rc-dropdown.open")).toHaveLength(1);
+    dropDown.find(".rc-dropdown-options").childAt(3).simulate("click");
+    expect(dropDown.find(".rc-option.selected")).toHaveLength(1);
+  });
 });
