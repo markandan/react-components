@@ -1,11 +1,11 @@
 import React from "react";
 import {mount} from "enzyme";
-import SimpleDropdown from "./Dropdown";
+import Dropdown from "./Dropdown";
 import Enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 Enzyme.configure({ adapter: new Adapter() });
 
-describe("<SimpleDropdown/>", () => {
+describe("<Dropdown/>", () => {
   let dropDown = null;
   const values = [{
     value: 1, label: "Apple"
@@ -42,12 +42,12 @@ describe("<SimpleDropdown/>", () => {
   }];
 
   beforeEach(() => {
-    dropDown = mount(<SimpleDropdown values={values} onChangeHandler={onChangeHandler} selectedIndex={2} className={className} placeholderTxt={placeholderTxt} width={width}/>);
+    dropDown = mount(<Dropdown values={values} onChangeHandler={onChangeHandler} selectedIndex={2} className={className} placeholderTxt={placeholderTxt} width={width}/>);
   });
 
   const filterValuesArray = ["Banana", "Orange"];
   beforeEach(() => {
-    dropDown = mount(<SimpleDropdown values={values} onChangeHandler={onChangeHandler} selectedIndex={2} className={className} placeholderTxt={placeholderTxt}/>);
+    dropDown = mount(<Dropdown values={values} onChangeHandler={onChangeHandler} selectedIndex={2} className={className} placeholderTxt={placeholderTxt}/>);
   });
   test("should set the selectedIndex in the state", () => {
     expect(dropDown.state("selectedIndex")).toEqual(2);
