@@ -76,6 +76,10 @@ describe("<Dropdown/>", () => {
   test("should have the default className", () => {
     expect(dropDown.find(".rc-dropdown")).toHaveLength(1);
   });
+  test("should render the default className if custom className is not given", () => {
+    dropDown.setProps({className: ""});
+    expect(dropDown.find(".rc-dropdown")).toHaveLength(1);
+  });
   test("should render the textbox enabling users to search", () => {
     expect(dropDown.find(".rc-txt-input")).toHaveLength(1);
   });
@@ -116,6 +120,28 @@ describe("<Dropdown/>", () => {
     expect(onChangeHandler).toHaveBeenCalled();
     expect(onChangeHandler.mock.calls[0][0]).toEqual(3);
   });
+
+  test("should only change the state when there is no onChnageHandler", () => {
+    dropDown.setProps({onChangeHandler: null});
+    dropDown.find(".rc-selected-value").simulate("click");
+    expect(dropDown.find(".rc-dropdown.open")).toHaveLength(1);
+    dropDown.find(".rc-dropdown-options").childAt(3).simulate("click");
+    expect(dropDown.state("selectedIndex")).toEqual(3);
+    expect(dropDown.state("inputValue")).toEqual(values[3].label);
+    expect(dropDown.state("isOpen")).toEqual(false);
+  });
+
+  test("should call the onChangeHandler when an option is changed and valueis only Array", () => {
+    onChangeHandler.mockReset();
+    dropDown.setProps({values: valueArray});
+    dropDown.find(".rc-selected-value").simulate("click");
+    expect(dropDown.find(".rc-dropdown.open")).toHaveLength(1);
+    dropDown.find(".rc-dropdown-options").childAt(3).simulate("click");
+    expect(dropDown.find(".rc-dropdown.open")).toHaveLength(0);
+    expect(onChangeHandler).toHaveBeenCalled();
+    expect(onChangeHandler.mock.calls[0][0]).toEqual(3);
+  });
+
   test("should have the custom className that is passed on as prop", () => {
     expect(dropDown.find(`.rc-dropdown.${className}`)).toHaveLength(1);
   });
@@ -172,6 +198,12 @@ describe("<Dropdown/>", () => {
     dropDown.setProps({autoComplete: false});
     expect(dropDown.find(".rc-txt-input")).toHaveLength(0);
     expect(dropDown.find(".rc-lbl-value")).toHaveLength(1);
+  });
+  test ("should render placeholder text when autocomplete is false and selectedIndex is -1", () => {
+    dropDown.setProps({autoComplete: false, selectedIndex: -1});
+    expect(dropDown.find(".rc-txt-input")).toHaveLength(0);
+    expect(dropDown.find(".rc-lbl-value")).toHaveLength(1);
+    expect(dropDown.find(".rc-lbl-value").text()).toEqual(placeholderTxt);
   });
   test ("should disable the textbox and the click events when the disabled prop is passed", () => {
     dropDown.setProps({autoComplete: true, disabled: true});
@@ -250,7 +282,7 @@ describe("<Dropdown/>", () => {
     expect(dropDown.state("isOpen")).toEqual(true);
     map.click({target: null});
     expect(dropDown.state("isOpen")).toEqual(false);
-  });  
+  });   
   test("toggleOptions function should toggle the state isOpen", () => { 
     dropDown.instance().toggleOptions();
     expect(dropDown.state("isOpen")).toEqual(true);

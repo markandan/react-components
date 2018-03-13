@@ -36,9 +36,7 @@ class Dropdown extends React.Component {
         inputValue: this.getInputValue(newProps.selectedIndex, newProps.values),
       });
     }
-    if (isEqual(newProps.values, this.props.values)) {
-      this.setState({ filteredValues: [...newProps.values] });
-    }
+    this.setState({ filteredValues: [...newProps.values] });
   }
 
   componentWillUnmount() {
@@ -47,7 +45,7 @@ class Dropdown extends React.Component {
 
   onOptionChange(value) {
     const { props } = this;
-    const selectedIndex = (typeof value === 'string') ? props.values.findIndex(value) : props.values.findIndex(element => element.value === value.value && element.label === value.label);
+    const selectedIndex = (typeof value === 'string') ? props.values.findIndex(element => element === value) : props.values.findIndex(element => element.value === value.value && element.label === value.label);
 
     this.setState({
       selectedIndex,
