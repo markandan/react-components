@@ -30,7 +30,7 @@ class Dropdown extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
-    if (newProps.selectedIndex && newProps.selectedIndex !== this.state.selectedIndex) {
+    if (newProps.selectedIndex !== undefined && newProps.selectedIndex !== null && newProps.selectedIndex !== this.state.selectedIndex) {
       this.setState({
         selectedIndex: newProps.selectedIndex,
         inputValue: this.getInputValue(newProps.selectedIndex, newProps.values),

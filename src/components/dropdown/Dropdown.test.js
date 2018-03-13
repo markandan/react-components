@@ -40,7 +40,10 @@ describe("<Dropdown/>", () => {
   },{
     value: 6, label: "Pear"
   }];
-
+  const map = {};
+  document.addEventListener = jest.fn((event, cb) => {
+    map[event] = cb;
+  });
   beforeEach(() => {
     dropDown = mount(<Dropdown values={values} onChangeHandler={onChangeHandler} selectedIndex={2} className={className} placeholderTxt={placeholderTxt} width={width}/>);
   });
@@ -49,9 +52,11 @@ describe("<Dropdown/>", () => {
   beforeEach(() => {
     dropDown = mount(<Dropdown values={values} onChangeHandler={onChangeHandler} selectedIndex={2} className={className} placeholderTxt={placeholderTxt}/>);
   });
-  test("should set the selectedIndex in the state", () => {
+  test("should set the selectedIndex, inputValue, filteredValues, isOpen in the state", () => {
     expect(dropDown.state("selectedIndex")).toEqual(2);
     expect(dropDown.state("inputValue")).toEqual(values[2].label);
+    expect(dropDown.state("isOpen")).toEqual(false);
+    expect(dropDown.state("filteredValues")).toEqual(values);
   });
   test("should not render the selected value if the selectedIndex is -1", () => {
     dropDown.setState({selectedIndex: -1, inputValue: ""});
@@ -81,6 +86,7 @@ describe("<Dropdown/>", () => {
     dropDown.find(".rc-dropdown-options").childAt(3).simulate("click");
     expect(dropDown.state("selectedIndex")).toEqual(3);
     expect(dropDown.state("inputValue")).toEqual(values[3].label);
+    expect(dropDown.state("isOpen")).toEqual(false);
     expect(dropDown.find(".rc-txt-input").instance().value).toEqual(values[3].label);
   });
   test("should have the placeholdertext in the textbox", () => {
@@ -89,8 +95,10 @@ describe("<Dropdown/>", () => {
   test("should toggle the class 'open' when rc-selected-value is clicked", () => {
     dropDown.find(".rc-selected-value").simulate("click");
     expect(dropDown.find(".rc-dropdown.open")).toHaveLength(1);
+    expect(dropDown.state("isOpen")).toEqual(true);
     dropDown.find(".rc-selected-value").simulate("click");
     expect(dropDown.find(".rc-dropdown.open")).toHaveLength(0);
+    expect(dropDown.state("isOpen")).toEqual(false);
   });
   test("should close the dropdown on selection of an option", () => {
     dropDown.find(".rc-selected-value").simulate("click");
@@ -98,6 +106,7 @@ describe("<Dropdown/>", () => {
     dropDown.find(".rc-dropdown-options").childAt(2).simulate("click");
     expect(dropDown.find(".rc-dropdown.open")).toHaveLength(0);
   });
+
   test("should call the onChangeHandler when an option is changed", () => {
     onChangeHandler.mockReset();
     dropDown.find(".rc-selected-value").simulate("click");
@@ -124,6 +133,7 @@ describe("<Dropdown/>", () => {
   test("should filter the options based on the value in the textbox", () => {
     expect(dropDown.state("filteredValues")).toEqual(values);
     dropDown.find(".rc-txt-input").simulate('change', { target: { value: 'an' } });
+    expect(dropDown.state("inputValue")).toEqual('an');
     expect(dropDown.state("filteredValues")).toEqual([{value: 2, label: "Banana"}, {value: 4, label: "Orange"}]);
   });
   test("should render only options that are filtered based on the values in textbox", () => {
@@ -146,6 +156,7 @@ describe("<Dropdown/>", () => {
     dropDown.find(".rc-txt-input").simulate('change', { target: { value: 'ab' } });
     expect(dropDown.state("filteredValues")).toEqual([]);
     expect(dropDown.find(".rc-dropdown-options").children()).toHaveLength(1);
+    expect(dropDown.find(".rc-error")).toHaveLength(1);
     expect(dropDown.find(".rc-dropdown-options").childAt(0).text()).toEqual(noOptionsFound);
   });
 
@@ -194,4 +205,66 @@ describe("<Dropdown/>", () => {
     dropDown.find(".rc-dropdown-options").childAt(3).simulate("click");
     expect(dropDown.find(".rc-option.selected")).toHaveLength(1);
   });
+  test("on calling the openOptions the state should be updated", () => {
+    dropDown.instance().openOptions();
+    expect(dropDown.state("isOpen")).toEqual(true);
+  });
+  test("on calling the closeOptions the state should be updated", () => {
+    dropDown.instance().closeOptions();
+    expect(dropDown.state("isOpen")).toEqual(false);
+  });
+  test("checking whether the select function is called when calling handleFocus", () => {
+    onChangeHandler.mockReset();
+    dropDown.instance().handleFocus({target: { select: onChangeHandler, value: 'an'}});
+    expect(onChangeHandler).toHaveBeenCalled();
+  });
+  test("checking handleTextChange function", () => {
+    dropDown.instance().handleTextChange({target: { value: 'an'}});
+    expect(dropDown.state("filteredValues")).toEqual([{value: 2, label: "Banana"}, {value: 4, label: "Orange"}]);
+    expect(dropDown.state("inputValue")).toEqual('an');
+  });
+  test("should reset the state when clearAllSelection method is called", () => {
+    dropDown.instance().clearAllSelection();
+    expect(dropDown.state("inputValue")).toEqual('');
+    expect(dropDown.state("selectedIndex")).toEqual(-1);
+    expect(dropDown.state("filteredValues")).toEqual(values);
+  });
+  test("getInputValue method to return the correct value if selected index is passed else it should be blank", () => {
+    expect(dropDown.instance().getInputValue(-1, values)).toEqual('');
+    expect(dropDown.instance().getInputValue(1, values)).toEqual(values[1].label);
+    expect(dropDown.instance().getInputValue(1, valueArray)).toEqual(valueArray[1]);
+  });
+  test("checkValueSelected should return true if value is found or else false", () => {
+    expect(dropDown.instance().checkValueSelected({ value: 3, label: "Guava"})).toEqual(true);
+    dropDown.instance().clearAllSelection();
+    expect(dropDown.instance().checkValueSelected({ value: 3, label: "Guava"})).toEqual(false);
+  });
+  test("handleDocumentClick updates the state properly", () => { 
+    dropDown.find(".rc-selected-value").simulate("click");    
+    dropDown.instance().handleDocumentClick({target: null});
+    expect(dropDown.state("isOpen")).toEqual(false);
+    expect(dropDown.state("inputValue")).toEqual(values[2].label);
+  });
+  test("should toggle the class 'open' when document is clicked", () => {
+    dropDown.find(".rc-selected-value").simulate("click");
+    expect(dropDown.state("isOpen")).toEqual(true);
+    map.click({target: null});
+    expect(dropDown.state("isOpen")).toEqual(false);
+  });  
+  test("toggleOptions function should toggle the state isOpen", () => { 
+    dropDown.instance().toggleOptions();
+    expect(dropDown.state("isOpen")).toEqual(true);
+    dropDown.instance().toggleOptions();
+    expect(dropDown.state("isOpen")).toEqual(false);
+  });
+  test("should update the state when the selectedIndex prop is changed", () => {
+    dropDown.setProps({selectedIndex: 0});
+    expect(dropDown.state("selectedIndex")).toEqual(0);
+    expect(dropDown.state("inputValue")).toEqual(values[0].label);
+  });
+  test("should update the state when the values prop is changed", () => {
+    dropDown.setProps({values: valueArray});
+    expect(dropDown.state("filteredValues")).toEqual(valueArray);
+  });
 });
+
