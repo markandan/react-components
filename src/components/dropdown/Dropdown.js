@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import isEqual from 'lodash';
 import './Dropdown.scss';
 
 class Dropdown extends React.Component {
@@ -30,7 +29,8 @@ class Dropdown extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
-    if (newProps.selectedIndex !== undefined && newProps.selectedIndex !== null && newProps.selectedIndex !== this.state.selectedIndex) {
+    if (newProps.selectedIndex !== undefined && newProps.selectedIndex !== null && 
+        newProps.selectedIndex !== this.state.selectedIndex) {
       this.setState({
         selectedIndex: newProps.selectedIndex,
         inputValue: this.getInputValue(newProps.selectedIndex, newProps.values),
